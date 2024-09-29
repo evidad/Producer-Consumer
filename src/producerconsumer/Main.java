@@ -4,6 +4,9 @@
  */
 package producerconsumer;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  *
  * @author errol
@@ -16,29 +19,20 @@ public class Main {
     public static void main(String[] args) {
         Buffer buffer = new Buffer();
 
-        // Start the producer thread
-        Producer producer = new Producer(buffer);
-        Thread producerThread = new Thread(producer);
-        producerThread.start();
+        // Create an ExecutorService with a fixed pool of 3 threads (1 producer, 2 consumers)
+        ExecutorService executorService = Executors.newFixedThreadPool(3);
 
-        // Continuously monitor the buffer size
-        new Thread(() -> {
-            while (true) {
-                // Start the consumer when the buffer size reaches 70
-                if (buffer.getBufferSize() >= 70) {
-                    System.out.println("Starting consumer...");
-                    Consumer consumer = new Consumer(buffer, 1);
-                    Thread consumerThread = new Thread(consumer);
-                    consumerThread.start();
-                    
-                    Consumer consumer2 = new Consumer(buffer, 2);
-                    Thread consumerThread2 = new Thread(consumer2);
-                    consumerThread2.start();
-                    
-                    break; // Only start the consumer once
-                }
-            }
-        }).start();
+        // Start the producer thread using ExecutorService
+        Producer producer = new Producer(buffer);
+        executorService.execute(producer); // Submit the producer task
+
+        // Start two consumer threads using ExecutorService
+        Consumer consumer1 = new Consumer(buffer, 1);
+        executorService.execute(consumer1); // Submit the first consumer task
+
+        Consumer consumer2 = new Consumer(buffer, 2);
+        executorService.execute(consumer2); // Submit the second consumer task
+
     }
     
 }

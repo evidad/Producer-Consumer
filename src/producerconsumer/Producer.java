@@ -26,8 +26,14 @@ public class Producer implements Runnable {
     public void run() {
         try {
             while (true) {
-                Packet pkt = new Packet();
-                myBuffer.insertPkt(pkt);
+                synchronized (myBuffer) {
+                     while (myBuffer.getBufferSize() >= 70) {
+                        myBuffer.wait();
+                    }
+                    Packet pkt = new Packet();
+                    myBuffer.insertPkt(pkt);
+                    myBuffer.notifyAll();
+                }
                 Thread.sleep(random.nextInt(1000));
             }
         } catch (InterruptedException e) {

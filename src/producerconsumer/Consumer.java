@@ -23,14 +23,22 @@ public class Consumer implements Runnable{
     public void run() {
         try {
             while (true) {
+                synchronized (myBuffer) {
+                    while (myBuffer.getBufferSize() < 70) {
+                        myBuffer.wait();
+                    }
                 // Remove packets from the buffer
                 Packet pkt = myBuffer.removePkt();
 
                 // Simulate some processing time
                 processPacket(pkt);
+                
+                myBuffer.notifyAll();
+                
+                }
 
                 // Sleep for a short time to simulate processing delay
-                Thread.sleep(500); // Sleep for 500 milliseconds
+                Thread.sleep(100); // Sleep for 500 milliseconds
             }
         } catch (InterruptedException e) {
             System.out.println("Consumer interrupted: " + e.getMessage());

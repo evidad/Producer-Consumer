@@ -40,6 +40,7 @@ public class Buffer {
         }
         // Remove the first packet (index 0) from the ArrayList
         Packet packet = buffer.remove(0);
+        notifyAll();
         System.out.println("Removed packet: " + packet + ", Buffer size: " + buffer.size());
         return packet;
     }
