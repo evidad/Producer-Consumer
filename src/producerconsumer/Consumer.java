@@ -27,7 +27,7 @@ public class Consumer implements Runnable {
         try {
             while (true) {
                 synchronized (myBuffer) {
-                    while (myBuffer.getBufferSize() <= 50) {
+                    while (myBuffer.getBufferSize() < 70) {
                         myBuffer.wait();
                     }
 
