@@ -8,22 +8,24 @@ package producerconsumer;
  *
  * @author errol
  */
-
 // Contains a simple string
 public class Packet {
+
     private String str;
-    
-    public Packet() {};
-    
-    public Packet(String str) {
-        this.str = str;
+    private int id;
+
+    private static int counter = 0;
+
+    public Packet() {
+        this.id = ++counter;
+        this.str = String.valueOf(id);
     }
-    
+   
     public String getStr() {
         return this.str;
     }
     
-    public void setStr(String str) {
-        this.str = str;
+    public int getId() {
+        return this.id;
     }
 }

@@ -24,7 +24,6 @@ public class Buffer {
 
     public synchronized void insertPkt(Packet packet) {
         buffer.add(packet);
-        System.out.println("Inserted packet: " + packet + ", Buffer size: " + buffer.size());
         notifyAll();
     }
 
@@ -41,7 +40,6 @@ public class Buffer {
 
         Packet packet = buffer.remove(0);
         notifyAll();
-        System.out.println("Removed packet: " + packet + ", Buffer size: " + buffer.size());
         return packet;
     }
 

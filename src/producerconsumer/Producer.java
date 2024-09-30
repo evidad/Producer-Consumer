@@ -14,7 +14,6 @@ import java.util.Random;
  * Has a single Producer class object which is a thread and a single Consumer
  * class which is also a thread. Make the Producer object at random time
  * intervals, create Packet objects and place them in the Buffer object.
- *
  */
 public class Producer implements Runnable {
 
@@ -30,15 +29,17 @@ public class Producer implements Runnable {
     public void run() {
         try {
             while (true) {
+                Packet pkt = new Packet();
+                
                 synchronized (myBuffer) {
                     while (myBuffer.getBufferSize() >= 70) {
                         myBuffer.wait();
                     }
-                    Packet pkt = new Packet();
                     myBuffer.insertPkt(pkt);
                     myBuffer.notifyAll();
+                    System.out.println("Producer inserted packet: ID: " + pkt.getId() + ", buffer size: " + myBuffer.getBufferSize());
                 }
-                Thread.sleep(random.nextInt(1000));
+                Thread.sleep(random.nextInt(100));
             }
         } catch (InterruptedException e) {
             System.out.println("Producer interrupted: " + e.getMessage());

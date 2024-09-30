@@ -15,11 +15,11 @@ package producerconsumer;
 public class Consumer implements Runnable {
 
     private Buffer myBuffer;
-    private int bufferID;
+    private int consumerID;
 
     public Consumer(Buffer buffer, int ID) {
         this.myBuffer = buffer;
-        this.bufferID = ID;
+        this.consumerID = ID;
     }
 
     @Override
@@ -27,22 +27,19 @@ public class Consumer implements Runnable {
         try {
             while (true) {
                 synchronized (myBuffer) {
-                    while (myBuffer.getBufferSize() < 70) {
+                    while (myBuffer.getBufferSize() <= 50) {
                         myBuffer.wait();
                     }
+
                     Packet pkt = myBuffer.removePkt();
-                    processPacket(pkt);
+                    System.out.println("Consumer " + consumerID + " removed packet: ID: " + pkt.getId() + ", buffer size: " + myBuffer.getBufferSize());
                     myBuffer.notifyAll();
                 }
-                Thread.sleep(100);
+                Thread.sleep(1000);
             }
         } catch (InterruptedException e) {
             System.out.println("Consumer interrupted: " + e.getMessage());
             Thread.currentThread().interrupt();
         }
-    }
-
-    private void processPacket(Packet pkt) {
-        System.out.println("Consumer " + bufferID + " processing " + pkt);
     }
 }
