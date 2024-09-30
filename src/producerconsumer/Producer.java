@@ -10,24 +10,28 @@ import java.util.Random;
  *
  * @author errol
  */
-// Has a single Producer class object which is a thread and a single Consumer class which is also a thread.
-// Make the Producer object at random time intervals, create Packet objects and place them in the Buffer object.
+/**
+ * Has a single Producer class object which is a thread and a single Consumer
+ * class which is also a thread. Make the Producer object at random time
+ * intervals, create Packet objects and place them in the Buffer object.
+ *
+ */
 public class Producer implements Runnable {
-    
+
     private Buffer myBuffer;
-    
+
     Random random = new Random();
-    
+
     public Producer(Buffer buffer) {
         this.myBuffer = buffer;
     }
-    
-      @Override
+
+    @Override
     public void run() {
         try {
             while (true) {
                 synchronized (myBuffer) {
-                     while (myBuffer.getBufferSize() >= 70) {
+                    while (myBuffer.getBufferSize() >= 70) {
                         myBuffer.wait();
                     }
                     Packet pkt = new Packet();

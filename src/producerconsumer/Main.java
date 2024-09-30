@@ -13,26 +13,18 @@ import java.util.concurrent.Executors;
  */
 public class Main {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
-        Buffer buffer = new Buffer();
 
-        // Create an ExecutorService with a fixed pool of 3 threads (1 producer, 2 consumers)
+        Buffer buffer = new Buffer();
         ExecutorService executorService = Executors.newFixedThreadPool(3);
 
-        // Start the producer thread using ExecutorService
         Producer producer = new Producer(buffer);
-        executorService.execute(producer); // Submit the producer task
+        executorService.execute(producer);
 
-        // Start two consumer threads using ExecutorService
         Consumer consumer1 = new Consumer(buffer, 1);
-        executorService.execute(consumer1); // Submit the first consumer task
+        executorService.execute(consumer1);
 
         Consumer consumer2 = new Consumer(buffer, 2);
-        executorService.execute(consumer2); // Submit the second consumer task
-
+        executorService.execute(consumer2);
     }
-    
 }
